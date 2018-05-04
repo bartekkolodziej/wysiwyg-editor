@@ -1,4 +1,4 @@
-  Button {
+  .wysiwyg-button {
       border: none;
       margin: 0;
       padding: 0;
@@ -22,24 +22,24 @@
       -webkit-appearance: none;
   }
 
-  .editable {
-      height: 500px;
+  #wysiwygInputArea {
+      height: 400px;
       border-top: 2px solid #c5c5c5;
       padding: 20px;
       overflow: hidden;
   }
 
-  .editor {
+  .wysiwyg-editor {
       border-top: 5px solid #222222;
       border-radius: 3px;
       box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12)
   }
 
-  .bar {
+  .wysiwyg-bar {
       cursor: default;
   }
 
-  .item {
+  .wysiwyg-item {
       cursor: pointer;
       color: #292929;
       display: inline-block;
@@ -48,19 +48,36 @@
       transition: 0.3s transform;
   }
 
-  .item-active {
+  .wysiwyg-item-active {
       color: #2275e6;
       transform: scale(1.5);
 
   }
 
-  .item:hover {
+  .wysiwyg-item:hover {
       transform: scale(1.5);
   }
 
+  .wysiwyg-item-small {
+      cursor: pointer;
+      color: #292929;
+      display: inline-block;
+      padding: 5px;
+      transition: 0.3s transform;
+  }
+
+  .wysiwyg-item-small-active {
+      color: #2275e6;
+      transform: scale(1.1);
+  }
+
+  .wysiwyg-item-small:hover {
+
+      transform: scale(1.1);
+  }
 
 
-  .btn {
+  .wysiwyg-btn {
       font-size: 10px;
       border: 1px solid #c5c5c5;
       border-radius: 2px;
@@ -72,7 +89,7 @@
       float: right;
   }
 
-  .img-upload {
+  .wysiwyg-img-upload {
       font-size: 10px;
       border: 1px dashed #c5c5c5;
       border-radius: 2px;
@@ -84,26 +101,26 @@
       width: 100%;
   }
 
-  .btn:hover,
-  .img-upload:hover {
+  .wysiwyg-btn:hover,
+  .wysiwyg-img-upload:hover {
       cursor: pointer;
       border: 1px solid #2275e6;
   }
 
-  .btn:active,
-  .img-upload:active {
+  .wysiwyg-btn:active,
+  .wysiwyg-img-upload:active {
       position: relative;
       top: 1px;
   }
 
-  .dropdown {
+  .wysiwyg-dropdown {
       display: inline-block;
       padding: 7px;
       margin: 6px;
       position: relative;
   }
 
-  .dropdown-content {
+  .wysiwyg-dropdown-content {
       text-align: center;
       cursor: default;
       display: none;
@@ -120,31 +137,28 @@
 
   }
 
-  .dropdown-active .dropdown-content {
+  .wysiwyg-dropdown-active .wysiwyg-dropdown-content {
       display: block;
   }
 
-  .dropdown-active {
+  .wysiwyg-dropdown-active {
       transform: scale(1.5);
       color: #2275e6;
   }
 
-  .item-small {
-      cursor: pointer;
-      color: #292929;
-      display: inline-block;
-      padding: 5px;
-      transition: 0.3s transform;
+  .wysiwyg-dropdown-content2 {
+      z-index: 3;
+      min-width: 150px;
+      padding: 6px 10px;
   }
 
-  .item-small:hover {
-
-      transform: scale(1.1);
+  .wysiwyg-dropdown-content3 {
+      min-width: 100px;
+      padding: 6px 10px;
   }
 
 
-
-  .unselectable {
+  .wysiwyg-unselectable {
       -moz-user-select: -moz-none;
       -khtml-user-select: none;
       -webkit-user-select: none;
@@ -152,7 +166,7 @@
       user-select: none;
   }
 
-  .font-options {
+  .wysiwyg-font-options {
       cursor: pointer;
       color: #292929;
       display: inline-block;
@@ -160,18 +174,18 @@
       border-right: 1px solid;
   }
 
-  .font-size {
+  .wysiwyg-font-size {
       text-align: center;
       font-size: 12px;
       color: black;
   }
 
-  .font-size:hover {
+  .wysiwyg-font-size:hover {
       background-color: #c5c5c5;
       cursor: pointer;
   }
 
-  .font-size-active {
+  .wysiwyg-font-size-active {
       background-color: #c5c5c5;
   }
 
@@ -179,15 +193,15 @@
       max-height: 300px;
   }
 
-  Input {
-      width: 100%;
-      font-size: 10px;
-      margin-bottom: 10px;
-      color: #2f2f2f;
+  .wysiwyg-input {
+      width: 100% !important;
+      font-size: 10px !important;
+      margin-bottom: 10px !important;
+      color: #2f2f2f !important;
       border-bottom: 1px solid #A9A9A9 !important;
-      border-top: 0;
-      border-left: 0;
-      border-right: 0;
+      border-top: 0 !important;
+      border-left: 0 !important;
+      border-right: 0 !important;
   }
 
   ::placeholder {
@@ -195,44 +209,32 @@
       opacity: 1;
   }
 
-  .DD-content2 {
-      z-index: 3;
-      min-width: 150px;
-      padding: 6px 10px;
-  }
 
-  .DD-content3 {
-      min-width: 100px;
-      padding: 6px 10px;
-  }
 
-  .invisible-imageUpload {
+  .wysiwyg-invisible-imageUpload {
       display: none;
   }
 
-  .dd-icons {
+  .wysiwyg-dd-icons {
       margin: 5px;
       float: left;
   }
 
-  .item-small-active {
-      color: #2275e6;
-      transform: scale(1.1);
-  }
 
-  .color-brick {
+
+  .wysiwyg-color-brick {
       padding: 8px;
       border: 1px solid black;
       width: 0 !important;
       height: 0 !important;
   }
 
-  .color-brick:hover {
+  .wysiwyg-color-brick:hover {
       border: 1px solid white;
       cursor: pointer;
   }
 
-  .colors-table {
+  .wysiwyg-colors-table {
       margin-bottom: 10px;
   }
 
@@ -242,14 +244,14 @@
       height: 20px;
   }
 
-  .td-custom {
+  .wysiwyg-td-custom {
       border: 1px solid gray !important;
       padding: 5px !important;
       width: 0 !important;
       height: 0 !important
   }
 
-  .td-custom-onhover {
+  .wysiwyg-td-custom-onhover {
       background-color: rgba(182, 218, 255, 0.74) !important;
       border: 1px solid gray !important;
       padding: 5px !important;
@@ -258,20 +260,46 @@
       cursor: pointer;
   }
 
-  .margin-none {
+  .wysiwyg-margin-none {
       margin: 0 !important;
   }
 
-  .float-left {
+  .wysiwyg-float-left {
       float: left;
   }
 
-  .switch {
+  .wysiwyg-switch {
       float: left;
       margin-bottom: 5px;
       width: 100%
   }
 
-  .switch-txt {
+  .wysiwyg-switch-txt {
       font-size: 11px;
   }
+
+
+
+/* Tooltip text */
+.wysiwyg-tooltip .wysiwyg-tooltiptext {
+    visibility: hidden;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    font-size: 9px;
+    float:left;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 13;
+    bottom: 100%;
+    left: 0;
+
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.wysiwyg-tooltip:hover .wysiwyg-tooltiptext {
+    visibility: visible;
+}
