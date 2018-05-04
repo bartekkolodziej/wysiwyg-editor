@@ -257,3 +257,21 @@
       height: 0 !important;
       cursor: pointer;
   }
+
+  .margin-none {
+      margin: 0 !important;
+  }
+
+  .float-left {
+      float: left;
+  }
+
+  .switch {
+      float: left;
+      margin-bottom: 5px;
+      width: 100%
+  }
+
+  .switch-txt {
+      font-size: 11px;
+  }
