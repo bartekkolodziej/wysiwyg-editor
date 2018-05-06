@@ -345,11 +345,11 @@ function highlightTable(row, col) { //highlight table rows and cols on hover in 
 }
 
 function insertTable(row, col) { //insert choosen table to editor
-    let html = "<table>"
+    let html = '<table style="border-collapse: collapse;">'
     for (let i = 0; i <= row; i++) {
         html += "<tr>"
         for (let j = 0; j <= col; j++) {
-            html += "<td></td>";
+            html += '<td style="border: 1px solid black; width:30px; height:30px"></td>';
         }
         html += "</tr>";
     }

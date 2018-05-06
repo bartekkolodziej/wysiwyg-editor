@@ -23,10 +23,11 @@
   }
 
   #wysiwygInputArea {
-      height: 400px;
+      min-height: 100px;
       border-top: 2px solid #c5c5c5;
       padding: 20px;
       overflow: hidden;
+
   }
 
   .wysiwyg-editor {
@@ -238,11 +239,6 @@
       margin-bottom: 10px;
   }
 
-  Td {
-      border: 1px solid gray;
-      width: 20px;
-      height: 20px;
-  }
 
   .wysiwyg-td-custom {
       border: 1px solid gray !important;
