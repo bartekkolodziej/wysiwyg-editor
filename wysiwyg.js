@@ -145,14 +145,12 @@ function loadWYSIWYG(containerID) {
                         </div>
 
                         <div class="wysiwyg-invisible-imageUpload" id="imgUpload">
-                            <input class="wysiwyg-input" type="file" name="imgUploadFile" onchange="showImage(event)" hidden/>
-                            <button class="wysiwyg-img-upload wysiwyg-float-left wysiwyg-button" id="clickUploaderBtn">Currently unavailable...</button>
+                            <input class="wysiwyg-input" type="file" name="imgUploadFile" hidden/>
+                            <button class="wysiwyg-img-upload wysiwyg-float-left wysiwyg-button" id="clickUploaderBtn">Choose image</button>
                         </div>
 
                     </div>
                 </div>
-
-
 
                 <button class="wysiwyg-item wysiwyg-button wysiwyg-tooltip" id="removeFormatBtn" ><i class="fas fa-eraser"></i><span class="wysiwyg-tooltiptext">Remove&nbspformat</span></button>
             </div>
@@ -179,17 +177,16 @@ function loadWYSIWYG(containerID) {
     }
 }
 
-function addScript(src) { //add external script (font awosme icons in this case)
+function addScript(src) { //add external script
     let script = document.createElement('script');
     script.type = 'text/javascript';
     script.src = src;
-
     document.getElementsByTagName('head')[0].appendChild(script);
 }
 
 //Insert link section
-function initLinksDD(){
-    document.getElementById('insertLinkBtn').addEventListener('click', function(){
+function initLinksDD() {
+    document.getElementById('insertLinkBtn').addEventListener('click', function () {
         insertLink();
     });
 }
@@ -206,22 +203,31 @@ function insertLink() { // insert link from given url from input field
     }
 }
 //Image upload section
-function initImagesDD(){
-    document.getElementById('insertImage').addEventListener('click', function(){
+function initImagesDD() {
+    //files uploaded via file upload are stored on firebase
+    //these function handle this
+    addScript('https://www.gstatic.com/firebasejs/5.0.0/firebase-app.js'); //obligatory script to use firebas
+    addScript('https://www.gstatic.com/firebasejs/5.0.0/firebase-storage.js'); //obligatory script to use firebase storage
+    addScript('https://www.gstatic.com/firebasejs/5.0.1/firebase.js'); //obligatory script
+    setTimeout(initializeFirebaseStorage, 1000); //wait a bit till scripts are loaded
+    document.getElementById('clickUploaderBtn').addEventListener('click', function () {
+        clickUploader();
+    });
+    document.getElementsByName('imgUploadFile')[0].addEventListener('change', function () {
+        uploadToFirebase(document.getElementsByName('imgUploadFile')[0]);
+    });
+    //to handle file upload on your own change functions above
+
+    document.getElementById('insertImage').addEventListener('click', function () {
         insertImage();
     });
 
-    document.getElementById('clickUploaderBtn').addEventListener('click', function(){
-        clickUploader();
-    });
-
-
     let switch1 = document.getElementById('switch1');
     let switch2 = document.getElementById('switch2');
-    switch1.addEventListener('click', function(){
+    switch1.addEventListener('click', function () {
         toggleImgUploadSlot(switch1);
     });
-    switch2.addEventListener('click', function(){
+    switch2.addEventListener('click', function () {
         toggleImgUploadSlot(switch2);
     });
 }
@@ -234,17 +240,7 @@ function getImgBySrc(src) { //return im with given src
 }
 
 function clickUploader() { //click hidden file input
-    //document.getElementsByName('imgUploadFile')[0].click();
-}
-
-function showImage(event) { //show image that was uploaded by file input
-    let src = URL.createObjectURL(event.target.files[0]);
-    execute('insertImage', src);
-    let img = getImgBySrc(src) //get image that was inserted by execCommand
-    if (img !== undefined)
-        img.style = "width:200px;";
-
-    document.getElementById('insertImageDD').classList.remove('wysiwyg-dropdown-active');
+    document.getElementsByName('imgUploadFile')[0].click();
 }
 
 function insertImage() { //insert image from given url from input field
@@ -252,6 +248,45 @@ function insertImage() { //insert image from given url from input field
     let img = getImgBySrc(document.getElementsByName('imgUrl')[0].value) //get image that was inserted by execCommand
     if (img !== undefined)
         img.style = "width:200px;";
+
+    document.getElementById('insertImageDD').classList.remove('wysiwyg-dropdown-active');
+}
+
+function initializeFirebaseStorage() {
+    //these are parameters of example firebase account
+    //to connect with another account change values below
+    var config = {
+        apiKey: "AIzaSyDohEKd9u943emxFh5UieFkr0vMo0NVtNY",
+        authDomain: "wysiwyg-editor.firebaseapp.com",
+        databaseURL: "https://wysiwyg-editor.firebaseio.com",
+        projectId: "wysiwyg-editor",
+        storageBucket: "wysiwyg-editor.appspot.com",
+        messagingSenderId: "1020398664581"
+    };
+    firebase.initializeApp(config);
+}
+
+function uploadToFirebase(fileInput) {
+    if (fileInput.value === '')
+        return;
+
+    const ref = firebase.storage().ref();
+    const file = fileInput.files[0]
+    const name = (+new Date()) + '-' + file.name;
+    const metadata = {
+        contentType: file.type
+    };
+    const task = ref.child(name).put(file, metadata);
+    task.then((snapshot) => {
+        snapshot.ref.getDownloadURL().then(function (url) {
+            execute('insertImage', url);
+            let img = getImgBySrc(url) //get image that was inserted by execCommand
+            if (img !== undefined)
+                img.style = "width:200px;";
+        });
+    }).catch((error) => {
+        console.error(error);
+    });
 
     document.getElementById('insertImageDD').classList.remove('wysiwyg-dropdown-active');
 }
@@ -280,7 +315,7 @@ function initFontSizesDD() { //fill drop down selection with 7 values
         let div = document.createElement('div');
         div.classList.add('wysiwyg-font-size');
         div.innerHTML = i;
-        div.addEventListener('click', function(){
+        div.addEventListener('click', function () {
             changeFontSize(i);
         });
         tmp.appendChild(div);
@@ -313,8 +348,8 @@ function initTableDD() {
             td.classList.add('wysiwyg-td-custom');
             td.setAttribute('id', 'td' + i + '' + j);
             td.setAttribute('onmouseover', 'highlightTable(' + i + ',' + j + ')');
-            td.addEventListener('click', function(){
-                insertTable(i,j);
+            td.addEventListener('click', function () {
+                insertTable(i, j);
             });
             tr.append(td);
         }
@@ -392,8 +427,8 @@ function createColorsTable() {
             let tableCell = document.createElement('td');
             tableCell.style = "background-color:" + colors[i][j] + "; padding:8px";
             tableCell.value = colors[i][j];
-            tableCell.addEventListener('click', function(){
-               changeColor(tableCell);
+            tableCell.addEventListener('click', function () {
+                changeColor(tableCell);
             });
             tableCell.classList.add('wysiwyg-color-brick');
             tableRow.append(tableCell);
@@ -526,7 +561,7 @@ function initBaseCommands() { //add eventListeners to commands like 'bold', 'ita
 
     });
 
-    document.getElementById('removeFormatBtn').addEventListener('click', function(){
+    document.getElementById('removeFormatBtn').addEventListener('click', function () {
         execute('removeFormat');
     });
 }
