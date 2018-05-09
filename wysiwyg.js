@@ -1,5 +1,7 @@
-var positionElement; //position of the carret
-var wrapperID; //element id where to put edtor
+//TO DO: fix inserting links and images
+
+var carretPosition;
+var wrapper;
 
 function loadWYSIWYG(containerID) {
     let template = `<div class="wysiwyg-editor">
@@ -155,12 +157,13 @@ function loadWYSIWYG(containerID) {
                 <button class="wysiwyg-item wysiwyg-button wysiwyg-tooltip" id="removeFormatBtn" ><i class="fas fa-eraser"></i><span class="wysiwyg-tooltiptext">Remove&nbspformat</span></button>
             </div>
 
-            <div id="wysiwygInputArea" contenteditable="true" onmouseleave="getCarretPosition()">
+            <div id="wysiwygInputArea" contenteditable="true" onfocusout="getCarretPosition()">
 
             </div>
         </div>`;
+
     if (document.getElementById(containerID) !== null) {
-        wrapperID = containerID;
+        wrapper = document.getElementById(containerID);
         addScript('https://use.fontawesome.com/releases/v5.0.7/js/all.js');
         document.getElementById(containerID).innerHTML = template;
         initTableDD();
@@ -184,6 +187,14 @@ function addScript(src) { //add external script
     document.getElementsByTagName('head')[0].appendChild(script);
 }
 
+function addScript(src, callback) {
+    let script = document.createElement("script")
+    script.type = "text/javascript";
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+    script.onload = callback;
+}
+
 //Insert link section
 function initLinksDD() {
     document.getElementById('insertLinkBtn').addEventListener('click', function () {
@@ -196,20 +207,24 @@ function insertLink() { // insert link from given url from input field
     let urlText = document.getElementById('linkText').value
     if (url !== '') {
         urlText === '' ? urlText = url : urlText = urlText;
+        execute('removeFormat');
         execute('insertHTML', '<a href=' + url + '>' + urlText + '</a>\u00a0');
         execute('removeFormat');
-        putCarret('wysiwygInputArea', positionElement);
         document.getElementById('insertLinkDD').classList.remove('wysiwyg-dropdown-active');
     }
 }
+
 //Image upload section
 function initImagesDD() {
     //files uploaded via file upload are stored on firebase
     //these function handle this
-    addScript('https://www.gstatic.com/firebasejs/5.0.0/firebase-app.js'); //obligatory script to use firebas
-    addScript('https://www.gstatic.com/firebasejs/5.0.0/firebase-storage.js'); //obligatory script to use firebase storage
-    addScript('https://www.gstatic.com/firebasejs/5.0.1/firebase.js'); //obligatory script
-    setTimeout(initializeFirebaseStorage, 1000); //wait a bit till scripts are loaded
+    addScript('https://www.gstatic.com/firebasejs/5.0.0/firebase-app.js', function () { //add one script after another
+        addScript('https://www.gstatic.com/firebasejs/5.0.0/firebase-storage.js', function () {
+            addScript('https://www.gstatic.com/firebasejs/5.0.1/firebase.js', function () {
+                initializeFirebaseStorage(); //then initialize firebase
+            });
+        });
+    });
     document.getElementById('clickUploaderBtn').addEventListener('click', function () {
         clickUploader();
     });
@@ -244,7 +259,9 @@ function clickUploader() { //click hidden file input
 }
 
 function insertImage() { //insert image from given url from input field
+    execute('removeFormat');
     execute('insertImage', document.getElementsByName('imgUrl')[0].value);
+    execute('enableObjectResizing');
     let img = getImgBySrc(document.getElementsByName('imgUrl')[0].value) //get image that was inserted by execCommand
     if (img !== undefined)
         img.style = "width:200px;";
@@ -254,7 +271,6 @@ function insertImage() { //insert image from given url from input field
 
 function initializeFirebaseStorage() {
     //these are parameters of example firebase account
-    //to connect with another account change values below
     var config = {
         apiKey: "AIzaSyDohEKd9u943emxFh5UieFkr0vMo0NVtNY",
         authDomain: "wysiwyg-editor.firebaseapp.com",
@@ -380,7 +396,7 @@ function highlightTable(row, col) { //highlight table rows and cols on hover in 
 }
 
 function insertTable(row, col) { //insert choosen table to editor
-    let html = '<table style="border-collapse: collapse;">'
+    let html = '<table style="border-collapse: collapse; margin:10px">'
     for (let i = 0; i <= row; i++) {
         html += "<tr>"
         for (let j = 0; j <= col; j++) {
@@ -478,8 +494,9 @@ function addHeading(heading) {
 
 //Commands
 function execute(commandName, arg = null) { //execute command
+    putCarret('wysiwygInputArea', carretPosition);
+    console.log(carretPosition);
     document.execCommand(commandName, false, arg);
-    putCarret('wysiwygInputArea', positionElement);
 }
 
 function checkActiveCommands() { //check wchich command is active and apply 'active' class
@@ -504,7 +521,7 @@ function checkActiveCommands() { //check wchich command is active and apply 'act
     document.getElementById('colorIcon').style = "color:" + document.queryCommandValue('foreColor');
 }
 
-function initBaseCommands() { //add eventListeners to commands like 'bold', 'italic' etc.
+function initBaseCommands() { //add eventListeners to commands buttons
     document.getElementById('bold').addEventListener('click', function () {
         execute('bold');
     });
@@ -636,7 +653,7 @@ function elementWithClassWasClicked(elementClass, eventTarget) { //check if elem
 
 function addClickListenerToDoc() {
     document.addEventListener('click', function (event) { //add eventListeners to document
-        if (document.getElementById(wrapperID) === null)
+        if (wrapper === null)
             return;
         toggleDropdowns(event.target); //on every click determine wchcich dropDowns should be opened/closed
         checkActiveCommands(); //on every click chceck wchich command is active
@@ -645,7 +662,7 @@ function addClickListenerToDoc() {
 
 function addKeydownListenerTowysiwygInputArea() {
     document.getElementById('wysiwygInputArea').addEventListener('keydown', function (e) { //add some keyDown listeners
-        if (document.getElementById(wrapperID) === null)
+        if (wrapper === null)
             return;
         checkActiveCommands(); //on every keyDown chceck wchich command is active
         //add some spaces after pressing tab in text editor
@@ -687,5 +704,12 @@ function putCarret(elemId, caretPos) { //put carret in textarea after using text
 }
 
 function getCarretPosition() {
-    positionElement = document.getElementById('wysiwygInputArea').selectionStart;
+    textField = document.getElementById('wysiwygInputArea');
+    textField.focus();
+    let _range = document.getSelection().getRangeAt(0);
+    let range = _range.cloneRange();
+    range.selectNodeContents(textField);
+    range.setEnd(_range.endContainer, _range.endOffset);
+    carretPosition = range.toString().length;
+    console.log(carretPosition);
 }
