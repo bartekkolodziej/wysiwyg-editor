@@ -1,23 +1,25 @@
-//TO DO: fix inserting links and images
-
-var carretPosition;
+var caretPosition;
 var wrapper;
 
 function loadWYSIWYG(containerID) {
     let template = `<div class="wysiwyg-editor">
             <div class="wysiwyg-bar wysiwyg-unselectable">
+
                 <button class="wysiwyg-item wysiwyg-button wysiwyg-tooltip" id="bold">
                     <i class="fa fa-bold"></i>
                     <span class="wysiwyg-tooltiptext">Bold</span>
                 </button>
+
                 <button class="wysiwyg-item wysiwyg-button wysiwyg-tooltip" id="italic">
                     <i class="fa fa-italic"></i>
                     <span class="wysiwyg-tooltiptext">Italic</span>
                 </button>
+
                 <button class="wysiwyg-item wysiwyg-button wysiwyg-tooltip" id="underline">
                     <i class="fa fa-underline"></i>
                     <span class="wysiwyg-tooltiptext">Underline</span>
                 </button>
+
                 <button class="wysiwyg-item wysiwyg-button wysiwyg-tooltip" id="strikeThrough">
                     <i class="fas fa-strikethrough"></i>
                      <span class="wysiwyg-tooltiptext">Strike&nbspthrough</span>
@@ -43,7 +45,6 @@ function loadWYSIWYG(containerID) {
                         <i class="fas fa-tint" id="colorIcon"></i>
                          <span class="wysiwyg-tooltiptext">Change&nbspcolor</span>
                     </div>
-
                     <div class="wysiwyg-dropdown-content wysiwyg-dropdown-content3">
                         <div class="wysiwyg-switch">
                             <div class="wysiwyg-item-small wysiwyg-item-small-active wysiwyg-float-left" id="switch3"><span class="wysiwyg-switch-txt">Text</span></div>
@@ -61,7 +62,6 @@ function loadWYSIWYG(containerID) {
                          <i class="fas fa-font"></i> <i class="fas fa-arrows-alt-v"></i>
                         <span class="wysiwyg-tooltiptext">Change&nbspfont&nbspsize</span>
                     </div>
-
                     <div class="wysiwyg-dropdown-content" id="fontSizes">
                     </div>
                 </div>
@@ -80,11 +80,11 @@ function loadWYSIWYG(containerID) {
                     <i class="fas fa-indent"></i>
                     <span class="wysiwyg-tooltiptext">Indent</span>
                 </button>
+
                 <button class="wysiwyg-item wysiwyg-button wysiwyg-tooltip" id="outdent">
                     <i class="fas fa-outdent"></i>
                     <span class="wysiwyg-tooltiptext">Outdent</span>
                 </button>
-
 
                 <div class="wysiwyg-dropdown wysiwyg-item" id="insertTableDD">
                     <div class="wysiwyg-tooltip">
@@ -96,7 +96,6 @@ function loadWYSIWYG(containerID) {
                         </table>
                     </div>
                 </div>
-
 
                 <div class="wysiwyg-dropdown wysiwyg-item" id="justifyDD">
                     <div class="wysiwyg-tooltip">
@@ -112,7 +111,7 @@ function loadWYSIWYG(containerID) {
                 </div>
 
                 <div class="wysiwyg-dropdown wysiwyg-item" id="insertLinkDD">
-                    <div class="wysiwyg-tooltip">
+                    <div class="wysiwyg-tooltip" >
                         <i class="fa fa-link"></i>
                         <span class="wysiwyg-tooltiptext">Insert&nbsplink</span>
                     </div>
@@ -123,42 +122,41 @@ function loadWYSIWYG(containerID) {
                     </div>
                 </div>
 
+                <button class="wysiwyg-item wysiwyg-button wysiwyg-tooltip" id="unlink">
+                    <i class="fas fa-unlink"></i>
+                     <span class="wysiwyg-tooltiptext">Unlink</span>
+                </button>
+
                 <div class="wysiwyg-dropdown wysiwyg-item" id="insertImageDD">
                     <div class="wysiwyg-tooltip">
                         <i class="far fa-image"></i>
                         <span class="wysiwyg-tooltiptext">Insert&nbspimage</span>
                     </div>
                     <div class="wysiwyg-dropdown-content wysiwyg-dropdown-content2">
-
                         <div class="wysiwyg-switch">
-                            <div class="wysiwyg-item-small wysiwyg-float-left wysiwyg-tooltip" id="switch1">
+                            <div class="wysiwyg-item-small wysiwyg-float-left wysiwyg-tooltip wysiwyg-item-small-active" id="switch1">
                                 <i class="fas fa-xs fa-upload"></i>
                                  <span class="wysiwyg-tooltiptext">via&nbspfile&nbspupload</span>
                             </div>
-                            <div class="wysiwyg-item-small wysiwyg-item-small-active wysiwyg-float-left wysiwyg-tooltip" id="switch2">
+                            <div class="wysiwyg-item-small wysiwyg-float-left wysiwyg-tooltip" id="switch2">
                                 <i class="fas fa-xs fa-link"></i>
                                  <span class="wysiwyg-tooltiptext">via&nbsplink</span>
                             </div>
                         </div>
-
-                        <div id="imgUrl">
+                        <div id="imgUrl" class="wysiwyg-invisible-imageUpload">
                             <input class="wysiwyg-input" placeholder="Url" name="imgUrl" />
                             <button class="wysiwyg-btn wysiwyg-button" id="insertImage">Insert</button>
                         </div>
-
-                        <div class="wysiwyg-invisible-imageUpload" id="imgUpload">
+                        <div id="imgUpload">
                             <input class="wysiwyg-input" type="file" name="imgUploadFile" hidden/>
                             <button class="wysiwyg-img-upload wysiwyg-float-left wysiwyg-button" id="clickUploaderBtn">Choose image</button>
                         </div>
-
                     </div>
                 </div>
 
                 <button class="wysiwyg-item wysiwyg-button wysiwyg-tooltip" id="removeFormatBtn" ><i class="fas fa-eraser"></i><span class="wysiwyg-tooltiptext">Remove&nbspformat</span></button>
             </div>
-
-            <div id="wysiwygInputArea" contenteditable="true" onfocusout="getCarretPosition()">
-
+            <div id="wysiwygInputArea" contenteditable="true" >
             </div>
         </div>`;
 
@@ -166,6 +164,8 @@ function loadWYSIWYG(containerID) {
         wrapper = document.getElementById(containerID);
         addScript('https://use.fontawesome.com/releases/v5.0.7/js/all.js');
         document.getElementById(containerID).innerHTML = template;
+        document.getElementById('wysiwygInputArea').innerHTML = '';
+        document.getElementById('wysiwygInputArea').focus();
         initTableDD();
         initFontSizesDD();
         initImagesDD();
@@ -174,6 +174,8 @@ function loadWYSIWYG(containerID) {
         initHeadingsDD();
         initBaseCommands();
         addClickListenerToDoc();
+        setTooltipPosition();
+        setDropdownPosition();
         addKeydownListenerTowysiwygInputArea();
     } else {
         console.log('Didnt find element with given ID: ' + id);
@@ -197,24 +199,47 @@ function addScript(src, callback) {
 
 //Insert link section
 function initLinksDD() {
+    document.getElementById('insertLinkDD').addEventListener('click', function () {
+        insertEmptyLink();
+    });
+
     document.getElementById('insertLinkBtn').addEventListener('click', function () {
         insertLink();
     });
+
 }
 
-function insertLink() { // insert link from given url from input field
-    let url = document.getElementById('linkUrl').value
-    let urlText = document.getElementById('linkText').value
-    if (url !== '') {
-        urlText === '' ? urlText = url : urlText = urlText;
-        execute('removeFormat');
-        execute('insertHTML', '<a href=' + url + '>' + urlText + '</a>\u00a0');
-        execute('removeFormat');
-        document.getElementById('insertLinkDD').classList.remove('wysiwyg-dropdown-active');
+function insertEmptyLink() {
+    //if there is already empty link in editor do nothing
+    let empty = document.getElementsByClassName('empty-link')[0];
+    if (empty !== undefined)
+        return;
+
+    document.execCommand('removeFormat', false, null);
+    document.execCommand('insertHTML', false, '<a class="empty-link"> </a>');
+    document.execCommand('removeFormat', false, null);
+}
+
+function removeEmptyLinks() {
+    //delete all empty links
+    while ((emptyLink = document.getElementsByClassName('empty-link')[0]) !== undefined) {
+        emptyLink.remove();
     }
 }
 
+function insertLink() {
+    let url = document.getElementById('linkUrl').value
+    let urlText = document.getElementById('linkText').value
+    if (url !== '' && document.getElementsByClassName('empty-link')[0] !== undefined) {
+        urlText === '' ? urlText = url : urlText = urlText;
+        document.getElementsByClassName('empty-link')[0].innerHTML = urlText;
+        document.getElementsByClassName('empty-link')[0].setAttribute('href', url);
+        document.getElementsByClassName('empty-link')[0].classList.remove('empty-link');
+        document.getElementById('insertLinkDD').classList.remove('wysiwyg-dropdown-active');
+    }
+}
 //Image upload section
+
 function initImagesDD() {
     //files uploaded via file upload are stored on firebase
     //these function handle this
@@ -244,10 +269,11 @@ function initImagesDD() {
     });
     switch2.addEventListener('click', function () {
         toggleImgUploadSlot(switch2);
+        insertEmptyImage();
     });
 }
 
-function getImgBySrc(src) { //return im with given src
+function getImgBySrc(src) { //return img with given src
     let imgs = document.getElementsByTagName('img');
     for (let i of imgs)
         if (i.getAttribute('src') === src)
@@ -258,14 +284,29 @@ function clickUploader() { //click hidden file input
     document.getElementsByName('imgUploadFile')[0].click();
 }
 
-function insertImage() { //insert image from given url from input field
-    execute('removeFormat');
-    execute('insertImage', document.getElementsByName('imgUrl')[0].value);
-    execute('enableObjectResizing');
-    let img = getImgBySrc(document.getElementsByName('imgUrl')[0].value) //get image that was inserted by execCommand
-    if (img !== undefined)
-        img.style = "width:200px;";
+function insertEmptyImage() {
+    let empty = getImgBySrc('empty-image');
+    if (empty !== undefined)
+        return;
+    document.execCommand('removeFormat', false, null);
+    document.execCommand('insertImage', false, 'empty-image');
+    document.execCommand('removeFormat', false, null);
+}
 
+function removeEmptyImages() {
+    while ((emptyImage = getImgBySrc('empty-image')) !== undefined) {
+        emptyImage.remove();
+    }
+}
+
+function insertImage() { //insert image from given url from input field
+    if (document.getElementsByName('imgUrl')[0].value === '')
+        return;
+
+    getImgBySrc('empty-image').style = "width:200px";
+    getImgBySrc('empty-image').setAttribute('src', document.getElementsByName('imgUrl')[0].value);
+
+    execute('enableObjectResizing');
     document.getElementById('insertImageDD').classList.remove('wysiwyg-dropdown-active');
 }
 
@@ -494,8 +535,7 @@ function addHeading(heading) {
 
 //Commands
 function execute(commandName, arg = null) { //execute command
-    putCarret('wysiwygInputArea', carretPosition);
-    console.log(carretPosition);
+    document.getElementById('wysiwygInputArea').focus();
     document.execCommand(commandName, false, arg);
 }
 
@@ -554,6 +594,10 @@ function initBaseCommands() { //add eventListeners to commands buttons
         execute('indent');
     });
 
+    document.getElementById('unlink').addEventListener('click', function () {
+        execute('unlink');
+    });
+
     document.getElementById('justifyCenter').addEventListener('click', function () {
         execute('justifyCenter');
         document.getElementById('justifyDD').classList.remove('wysiwyg-dropdown-active');
@@ -584,7 +628,7 @@ function initBaseCommands() { //add eventListeners to commands buttons
 }
 
 //Helper functions and others
-function toggleDropdowns(eventTarget) { //determine wchich dropDown menu should be closed/opened
+function toggleDropdowns(eventTarget) { //determine which dropDown menu should be closed/opened
     let clickedId = ''; //store id of clicked element
 
 
@@ -601,8 +645,9 @@ function toggleDropdowns(eventTarget) { //determine wchich dropDown menu should 
     }
 
     if (elementWithIdWasClicked('insertLinkDD', eventTarget)) {
-        if (!elementWithClassWasClicked('wysiwyg-dropdown-content', eventTarget))
+        if (!elementWithClassWasClicked('wysiwyg-dropdown-content', eventTarget)) {
             document.getElementById('insertLinkDD').classList.toggle('wysiwyg-dropdown-active');
+        }
         clickedId = 'insertLinkDD';
     }
     if (elementWithIdWasClicked('insertImageDD', eventTarget)) {
@@ -628,6 +673,17 @@ function toggleDropdowns(eventTarget) { //determine wchich dropDown menu should 
             document.getElementById('insertTableDD').classList.toggle('wysiwyg-dropdown-active');
         clickedId = 'insertTableDD';
     }
+
+    //remove empty links and images
+    //if 'insertLinkDD' wasnt clicked
+    if (clickedId !== 'insertLinkDD')
+        removeEmptyLinks();
+    //if 'insertImageDD' wasnt clicked
+    if (clickedId !== 'insertImageDD') {
+        removeEmptyImages();
+        toggleImgUploadSlot(switch1); //set 'insert image via file upload' active after hiding dropdown
+    }
+
 
 
     //hide all dropdowns expect this one with 'clickedId'
@@ -655,16 +711,17 @@ function addClickListenerToDoc() {
     document.addEventListener('click', function (event) { //add eventListeners to document
         if (wrapper === null)
             return;
-        toggleDropdowns(event.target); //on every click determine wchcich dropDowns should be opened/closed
-        checkActiveCommands(); //on every click chceck wchich command is active
+        toggleDropdowns(event.target); //on every click determine which dropDowns should be opened/closed
+        checkActiveCommands(); //on every click chceck which command is active
     });
 }
 
 function addKeydownListenerTowysiwygInputArea() {
     document.getElementById('wysiwygInputArea').addEventListener('keydown', function (e) { //add some keyDown listeners
+
         if (wrapper === null)
             return;
-        checkActiveCommands(); //on every keyDown chceck wchich command is active
+        checkActiveCommands(); //on every keyDown chceck which command is active
         //add some spaces after pressing tab in text editor
         if (e.keyCode === 9) { // tab key
             e.preventDefault(); // this will prevent us from tabbing out of the editor
@@ -686,30 +743,53 @@ function addKeydownListenerTowysiwygInputArea() {
     });
 }
 
-function putCarret(elemId, caretPos) { //put carret in textarea after using text editor's options
-    var elem = document.getElementById(elemId);
-    if (elem != null) {
-        if (elem.createTextRange) {
-            var range = elem.createTextRange();
-            range.move('character', caretPos);
-            range.select();
-        } else {
-            if (elem.selectionStart) {
-                elem.focus();
-                elem.setSelectionRange(caretPos, caretPos);
-            } else
-                elem.focus();
-        }
+function setTooltipPosition() {
+    let tooltips = document.getElementsByClassName('wysiwyg-tooltip');
+    for (let tp of tooltips) {
+        tp.addEventListener('mouseenter', function () {
+            let tooltipText = getChildElementByClassName(tp, 'wysiwyg-tooltiptext');
+            let boundingBox = tooltipText.getBoundingClientRect();
+
+            if (boundingBox.top < 70) {
+                tooltipText.style.bottom = null;
+                tooltipText.style.top = "100%";
+            } else if (boundingBox.top > 7) {
+                tooltipText.style.top = null;
+                tooltipText.style.bottom = "100%";
+            }
+
+            if (boundingBox.left < 70) {
+                tooltipText.style.right = null;
+                tooltipText.style.left = "0";
+            } else if (boundingBox.left > 70) {
+                tooltipText.style.left = null;
+                tooltipText.style.right = "0";
+            }
+        });
     }
 }
 
-function getCarretPosition() {
-    textField = document.getElementById('wysiwygInputArea');
-    textField.focus();
-    let _range = document.getSelection().getRangeAt(0);
-    let range = _range.cloneRange();
-    range.selectNodeContents(textField);
-    range.setEnd(_range.endContainer, _range.endOffset);
-    carretPosition = range.toString().length;
-    console.log(carretPosition);
+function setDropdownPosition() {
+    let dropdowns = document.getElementsByClassName('wysiwyg-dropdown');
+
+    for (let dd of dropdowns) {
+        dd.addEventListener('mouseenter', function () {
+            let ddContent = getChildElementByClassName(dd, 'wysiwyg-dropdown-content')
+            let boundingBox = dd.getBoundingClientRect();
+            if (boundingBox.left < 220) {
+                ddContent.style.right = null;
+                ddContent.style.left = "0";
+            } else if (boundingBox.left > 220) {
+                ddContent.style.left = null;
+                ddContent.style.right = "0";
+            }
+        });
+    }
+}
+
+function getChildElementByClassName(element, className) {
+    for (var i = 0; i < element.childNodes.length; i++) {
+        if (element.childNodes[i].classList !== undefined && element.childNodes[i].classList.contains(className))
+            return element.childNodes[i];
+    }
 }
