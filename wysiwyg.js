@@ -1,6 +1,7 @@
 'use strict';
 
 var wysiwygEditor = (function () {
+    var pathToModulesDirectory = 'modules'; //path from your index.html file
     var wrapper; //cache DOM
     var wysiwygInputArea; //cache DOM
     var countOfLoadedModules = 0; //increment after each module load, and control further actions
@@ -87,11 +88,11 @@ var wysiwygEditor = (function () {
         //load modules
         if (requiredModules !== null) { //if user expects selected modules
             for (let x of requiredModules)
-                addScript('modules/' + x + '.js', controlScriptsLoadingProcess);
+                addScript(pathToModulesDirectory + '/' + x + '.js', controlScriptsLoadingProcess);
             modules = requiredModules; //update global variable
         } else {
             for (let x of modules)
-                addScript('modules/' + x + '.js', controlScriptsLoadingProcess);
+                addScript(pathToModulesDirectory + '/' + x + '.js', controlScriptsLoadingProcess);
         }
 
         addScript('https://use.fontawesome.com/releases/v5.0.7/js/all.js');
