@@ -14,7 +14,7 @@ How to:
 ```
 wysiwygEditor.load('divID')
 ```
-, then editor will be placed inside the div with given ID. All modules will be included. Or you can specify wchich modules you want by passing array as second argument like this:
+Then editor will be placed inside the div with given ID. All modules will be included. Or you can specify wchich modules you want by passing array as second argument like this:
 ```
 wysiwygEditor.load('divID', ['bold', 'italic', 'images, 'table']);
 ```
