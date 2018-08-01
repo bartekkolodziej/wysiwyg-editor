@@ -39,3 +39,6 @@ Available modules:
 'images',
 'removeFormat'
 ```
+
+
+Demo: https://jsfiddle.net/k3rmzb80/38/
